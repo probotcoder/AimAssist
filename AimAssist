@@ -1,0 +1,82 @@
+local StarterGui = game:GetService("StarterGui")
+
+local ScreenGui = StarterGui:WaitForChild("ScreenGui")
+
+local Frame = ScreenGui:WaitForChild("Frame")
+
+local Aimassist = Frame:WaitForChild("Aimassist")
+
+local camera =  workspace.CurrentCamera
+
+
+
+
+Aimassist.MouseButton1Click:Connect(function()
+
+	-- Find the closest player
+
+	local closestPlayer = findClosestPlayer()
+
+
+
+
+	-- Make the camera focus on the closest player
+
+	camera.CFrame = CFrame.new(camera.CFrame.Position, closestPlayer.Character.Head.Position)
+
+end)
+
+
+
+
+function findClosestPlayer()
+
+	local player = game.Players.LocalPlayer
+
+	local character = player.Character
+
+	local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+	local closestPlayer = nil
+
+	local closestDistance = math.huge
+
+
+
+
+	for _, otherPlayer in pairs(game.Players:GetPlayers()) do
+
+		if otherPlayer ~= player then
+
+			local otherCharacter = otherPlayer.Character
+
+			if otherCharacter then
+
+				local otherHumanoidRootPart = otherCharacter:FindFirstChild("HumanoidRootPart")
+
+				if otherHumanoidRootPart then
+
+					local distance = (humanoidRootPart.Position - otherHumanoidRootPart.Position).Magnitude
+
+					if distance < closestDistance then
+
+						closestPlayer = otherPlayer
+
+						closestDistance = distance
+
+					end
+
+				end
+
+			end
+
+		end
+
+	end
+
+
+
+
+	return closestPlayer
+
+end
